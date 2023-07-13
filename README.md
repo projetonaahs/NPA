@@ -13,6 +13,4 @@ Título: Analise da complexibilidade do cérebro humano, por meio de padrões de
 
 4. Descrição detalhada dos materiais:
 
-5. Cronograma de atividades:
-
-6. Bibliografia:
+5. Bibliografia:
