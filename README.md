@@ -1,6 +1,6 @@
 # NPA
 
-In an effort to enhance the accessibility of neuroscience studies and neural network data analysis for the social community, we are currently developing the Neural Pattern Analyzer (NPA). The NPA is an nonprofit initiative aiming to analyze neural patterns using functional Magnetic Resonance Imaging (fMRI) images.
+In an effort to enhance the accessibility of neuroscience studies and neural network data analysis for the social community, we are currently developing the Neural Pattern Analyzer (NPA). The NPA is a nonprofit initiative aiming to analyze neural patterns using functional Magnetic Resonance Imaging (fMRI) images.
 
 These images are produced when an individual is actively performing a specific task or in a resting state. The algorithm utilizes a correlation matrix to represent the interconnections between various brain regions, illustrating the strength of these connections. By scrutinizing this matrix, we can identify the most actively interconnected brain regions.
 
