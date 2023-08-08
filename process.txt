@@ -5,3 +5,11 @@
 
     2.diagnóstico (de doenças ou distúrbios cerebrais): usar as séries temporais das regiões cerebrais para treinar um modelo capaz de identificar padrões associados a certas doenças ou distúrbios.
     exemplo: treinamento para prever se um determinado padrão está associado à presença de doenças como o transtorno do déficit de atenção e hiperatividade (TDAH).
+
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+3 datasets em determinados estados/transtornos e um dataset de pessoas normais - rest&control (sem transtornos).
+
+
+x = [depressão, esquizofrenia, TAG]

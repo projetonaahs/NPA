@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-data = datasets.fetch_adhd(n_subjects=7)
+data = datasets.fetch_adhd(n_subjects=1)
 
 func_file = data.func[0]
 
@@ -35,13 +35,7 @@ plotting.plot_connectome(
     c_matrix, coords, edge_threshold='85%'
 )
 
-#dataframe com rótulos e regiões. *******arrumar*******
-region_table = pd.DataFrame({'Rótulo': a['labels'], 'Função': a['description']})
-
-html_table = region_table.to_html()
-
-#salvar arquivo html.
-with open('region_table.html', 'w') as file:
-    file.write(html_table)
-
 plotting.show()
+
+
+
