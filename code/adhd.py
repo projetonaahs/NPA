@@ -1,6 +1,7 @@
 from nilearn import datasets, maskers, connectome
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
 
 data = datasets.fetch_adhd(n_subjects=10)
 
@@ -25,11 +26,15 @@ c_matrix = c_measure.fit_transform([t_series])[0]
 # Preenche de branco a diagonal da matriz
 np.fill_diagonal(c_matrix, 0)
 
+# Normaliza os valores da matriz de correlação para o intervalo de 0 a 1
+scaler = MinMaxScaler(feature_range=(0, 1))
+c_matrix = scaler.fit_transform(c_matrix)
+
 # Configuração da figura para a matriz de correlação
 fig_matrix, ax_matrix = plt.subplots(figsize=(8, 6))
-cax_matrix = ax_matrix.matshow(c_matrix, cmap='coolwarm', vmax=0.8, vmin=-0.8)
+cax_matrix = ax_matrix.matshow(c_matrix, cmap='coolwarm')
 fig_matrix.colorbar(cax_matrix, shrink=0.8, aspect=20)
-ax_matrix.set_title("Matriz de Correlação")
+ax_matrix.set_title("Matriz de Correlação Normalizada (0-1)")
 
 # Configuração dos rótulos das regiões
 ax_matrix.set_xticks(np.arange(len(labels)))
