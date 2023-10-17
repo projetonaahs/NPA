@@ -41,18 +41,6 @@ fig_matrix.colorbar(cax_matrix, shrink=0.8, aspect=20)
 ax_matrix.set_title("ADHD correlation matrix")
 
 
-# test
-
-X_train, X_test, y_train, y_test = train_test_split(c_matrix, labels, test_size=0.2, random_state=42)
-
-y_pred = clf.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-report = classification_report(y_test, y_pred)
-print("Accuracy:", accuracy)
-print(report)
-
-# test
-
 
 
 ax_matrix.set_xticks(np.arange(len(labels)))
@@ -66,9 +54,6 @@ for i, label1 in enumerate(labels):
     for j, label2 in enumerate(labels):
         if i < j and c_matrix[i, j] > threshold:
             print(f"{label1} + {label2}: {c_matrix[i, j]:.2f}")
-
-
-clf.fit(X_train, y_train)
 
 
 

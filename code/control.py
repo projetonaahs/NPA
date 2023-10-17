@@ -1,43 +1,74 @@
-import pandas as pd
+# printar os rótulos conectados (região a região) + a força das interações
+# juntar os dois arquivos em apenas um (ou chamar diferentes módulos - adhd + control > main1)
+#                                     (                             - autism + control > main2)
+# implementar calculos pelo sklearn e estabelecer acurácia;
+
 from nilearn import datasets, maskers, connectome
-from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
+import pandas as pd
+import glob
 
-data_dir = "/home/julia/Documentos/"
+func_directory = '/home/julia/Documentos/ABIDE_pcp/cpac/nofilt_noglobal/control/'
 
-# Parâmetro para filtrar apenas indivíduos saudáveis (grupo de controle)
-abide = datasets.fetch_abide_pcp(data_dir, n_subjects=10, DX_GROUP=2)
+confounds_file = '/home/julia/Documentos/ABIDE_pcp/cpac/Phenotypic_V1_0b_preprocessed1.csv'
 
+confounds_df = pd.read_csv(confounds_file)
 
+num_time_points = 196
 
-# Carregar o atlas MSDL
+func_files_control = glob.glob(func_directory + '*.nii.gz')
+
 a = datasets.fetch_atlas_msdl()
-a_fname = a.maps
+a_fname = a['maps']
+labels = a['labels']
 
-# Inicializar o masker
 m4sk3r = maskers.NiftiMapsMasker(
-    maps_img=a_fname, standardize='zscore_sample', memory='nilearn_cache', verbose=5
+    maps_img=a_fname, standardize='zscore_sample', verbose=5 #set a memory....
 )
+m4sk3r.fit(func_files_control)  
 
-# Extrair séries temporais das regiões definidas pelo atlas
-t_series = m4sk3r.transform(abide.func_preproc)
+connectivity_matrices = []
 
-# Calcular a matriz de conectividade funcional (correlação)
-c_measure = connectome.ConnectivityMeasure(kind='correlation')
-c_matrix = c_measure.fit_transform(t_series)
+for func_file in func_files_control:
+    subject_id = func_file.split("/")[-1].split("_")[1]
 
-# Preencher a diagonal com zeros
-np.fill_diagonal(c_matrix, 0)
+    confounds_current = confounds_df[confounds_df['SUB_ID'] == int(subject_id)]
 
-# Normalizar a matriz de conectividade
-scaler = MinMaxScaler(feature_range=(0, 1))
-c_matrix = scaler.fit_transform(c_matrix)
+    if len(confounds_current) != num_time_points:
+        print(f"Ajustando confounds para o sujeito {subject_id}...")
+        if len(confounds_current) > num_time_points:
+            confounds_current = confounds_current.iloc[:num_time_points]
+        else:
+            num_missing_rows = num_time_points - len(confounds_current)
+            missing_rows = pd.DataFrame([[0] * len(confounds_df.columns)] * num_missing_rows, columns=confounds_df.columns)
+            confounds_current = pd.concat([confounds_current, missing_rows], ignore_index=True)
 
-# Renderizar a matriz como um gráfico de calor
-fig_matrix, ax_matrix = plt.subplots(figsize=(12, 10))
-cax_matrix = ax_matrix.matshow(c_matrix, cmap='viridis')  # Você pode escolher outro mapa de cores se preferir
-fig_matrix.colorbar(cax_matrix, shrink=0.8, aspect=20)
-ax_matrix.set_title("Matriz de Conectividade Funcional Normalizada (0-1)")
+    t_series_control = m4sk3r.transform(func_file, confounds=confounds_current)
+
+    c_measure = connectome.ConnectivityMeasure(kind='correlation')
+    c_matrix_control = c_measure.fit_transform([t_series_control])[0]
+
+    np.fill_diagonal(c_matrix_control, 0)
+
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    c_matrix_control = scaler.fit_transform(c_matrix_control)
+
+    connectivity_matrices.append(c_matrix_control)
+
+
+average_connectivity_matrix = np.mean(connectivity_matrices, axis=0)
+
+
+fig, ax = plt.subplots(figsize=(12, 10))
+cax = ax.matshow(average_connectivity_matrix, cmap='viridis')
+fig.colorbar(cax, shrink=0.8, aspect=20)
+ax.set_title("Average Control Subject Correlation Matrix")
+
+ax.set_xticks(np.arange(len(labels)))
+ax.set_yticks(np.arange(len(labels)))
+ax.set_xticklabels(labels, rotation=90)
+ax.set_yticklabels(labels)
 
 plt.show()
