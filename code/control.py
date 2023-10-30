@@ -1,4 +1,4 @@
-# printar os rótulos conectados (região a região) + a força das interações
+
 # juntar os dois arquivos em apenas um (ou chamar diferentes módulos - adhd + control > main1)
 #                                     (                             - autism + control > main2)
 # implementar calculos pelo sklearn e estabelecer acurácia;
@@ -58,17 +58,28 @@ for func_file in func_files_control:
     connectivity_matrices.append(c_matrix_control)
 
 
+# Após calcular a matriz de conectividade média
 average_connectivity_matrix = np.mean(connectivity_matrices, axis=0)
 
-
+# Criar uma figura e um eixo para a visualização
 fig, ax = plt.subplots(figsize=(12, 10))
 cax = ax.matshow(average_connectivity_matrix, cmap='viridis')
 fig.colorbar(cax, shrink=0.8, aspect=20)
 ax.set_title("Average Control Subject Correlation Matrix")
 
+# Configurar os rótulos das regiões (labels) nos eixos x e y
 ax.set_xticks(np.arange(len(labels)))
 ax.set_yticks(np.arange(len(labels)))
 ax.set_xticklabels(labels, rotation=90)
 ax.set_yticklabels(labels)
 
+# Mostrar a plotagem
 plt.show()
+
+# Acessar os rótulos e a força das interações
+for i in range(len(labels)):
+    for j in range(i + 1, len(labels)):
+        label1 = labels[i]
+        label2 = labels[j]
+        strength = average_connectivity_matrix[i, j]
+        print(f"Conexão entre {label1} e {label2}: força = {strength}")

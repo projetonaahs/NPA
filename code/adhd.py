@@ -14,8 +14,6 @@ func_file = data.func[0]
 
 confounds_file = data.confounds[0]
 
-# add control group (y)
-
 
 a = datasets.fetch_atlas_msdl()
 a_fname = a['maps']
