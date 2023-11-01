@@ -75,6 +75,6 @@ for i in range(len(labels)):
         label1 = labels[i]
         label2 = labels[j]
         strength = average_connectivity_matrix[i, j]
-        print(f"Conexão entre {label1} e {label2}: força = {strength}")
+        print(f"conexão entre {label1} e {label2}: força = {strength}")
 
 plt.show()
