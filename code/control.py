@@ -70,11 +70,13 @@ ax.set_xticklabels(labels, rotation=90)
 ax.set_yticklabels(labels)
 
 
+threshold = 0.7
 for i in range(len(labels)):
     for j in range(i + 1, len(labels)):
         label1 = labels[i]
         label2 = labels[j]
         strength = average_connectivity_matrix[i, j]
-        print(f"conexão entre {label1} e {label2}: força = {strength}")
+        if strength >= threshold:
+            print(f"{label1} + {label2}: {strength:.2f}")
 
 plt.show()
