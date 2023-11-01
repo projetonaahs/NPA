@@ -62,14 +62,13 @@ average_connectivity_matrix = np.mean(connectivity_matrices, axis=0)
 fig, ax = plt.subplots(figsize=(12, 10))
 cax = ax.matshow(average_connectivity_matrix, cmap='viridis')
 fig.colorbar(cax, shrink=0.8, aspect=20)
-ax.set_title("Average Control Subject Correlation Matrix")
+ax.set_title("control correlation matrix")
 
 ax.set_xticks(np.arange(len(labels)))
 ax.set_yticks(np.arange(len(labels)))
 ax.set_xticklabels(labels, rotation=90)
 ax.set_yticklabels(labels)
 
-plt.show()
 
 for i in range(len(labels)):
     for j in range(i + 1, len(labels)):
@@ -77,3 +76,5 @@ for i in range(len(labels)):
         label2 = labels[j]
         strength = average_connectivity_matrix[i, j]
         print(f"Conexão entre {label1} e {label2}: força = {strength}")
+
+plt.show()
