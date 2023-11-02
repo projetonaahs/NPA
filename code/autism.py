@@ -15,7 +15,7 @@ confounds_df = pd.read_csv(confounds_file)
 
 num_time_points = 196
 
-func_files_autism = glob.glob(func_directory + '*.nii.gz')
+func_files_autism = glob.glob(func_directory + '*.nii.gz')[:5]
 
 a = datasets.fetch_atlas_msdl()
 a_fname = a['maps']

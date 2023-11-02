@@ -8,7 +8,7 @@ from sklearn.svm import SVC
 
 clf = SVC(kernel='linear', C=1.0)
 
-data = datasets.fetch_adhd(n_subjects=10) # adhd group (x)
+data = datasets.fetch_adhd(n_subjects=5) # adhd group (x)
 
 func_file = data.func[0]
 
