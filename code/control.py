@@ -1,8 +1,3 @@
-
-# juntar os dois arquivos em apenas um (ou chamar diferentes módulos - adhd + control > main1)
-#                                     (                             - autism + control > main2)
-# implementar calculos pelo sklearn e estabelecer acurácia;
-
 from nilearn import datasets, maskers, connectome
 import numpy as np
 import matplotlib.pyplot as plt
@@ -18,7 +13,7 @@ confounds_df = pd.read_csv(confounds_file)
 
 num_time_points = 196
 
-func_files_control = glob.glob(func_directory + '*.nii.gz')[:5]
+func_files_control = glob.glob(func_directory + '*.nii.gz')[:9]
 
 a = datasets.fetch_atlas_msdl()
 a_fname = a['maps']
@@ -55,6 +50,8 @@ for func_file in func_files_control:
     scaler = MinMaxScaler(feature_range=(0, 1))
     c_matrix_control = scaler.fit_transform(c_matrix_control)
 
+    np.save('c_matrix_control.npy', c_matrix_control)
+
     connectivity_matrices.append(c_matrix_control)
 
 average_connectivity_matrix = np.mean(connectivity_matrices, axis=0)
@@ -79,4 +76,5 @@ for i in range(len(labels)):
         if strength >= threshold:
             print(f"{label1} + {label2}: {strength:.2f}")
 
-plt.show()
+
+#plt.show()

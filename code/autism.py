@@ -15,7 +15,7 @@ confounds_df = pd.read_csv(confounds_file)
 
 num_time_points = 196
 
-func_files_autism = glob.glob(func_directory + '*.nii.gz')[:5]
+func_files_autism = glob.glob(func_directory + '*.nii.gz')[:9]
 
 a = datasets.fetch_atlas_msdl()
 a_fname = a['maps']
@@ -51,6 +51,8 @@ for func_file in func_files_autism:
 
     scaler = MinMaxScaler(feature_range=(0, 1))
     c_matrix_autism = scaler.fit_transform(c_matrix_autism)
+    np.save('c_matrix_autism.npy', c_matrix_autism)
+
 
     connectivity_matrices.append(c_matrix_autism)
 
@@ -75,4 +77,5 @@ for i in range(len(labels)):
         if strength >= threshold:
             print(f"{label1} + {label2}: {strength:.2f}")
 
-plt.show()
+
+#plt.show()
