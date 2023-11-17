@@ -35,7 +35,7 @@ y_pred = clf.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 report = classification_report(y_test, y_pred, target_names=['control', 'adhd', 'autism'])
 
-print(f"accuracy: {accuracy}")# accuracy:.2f
+print(f"accuracy: {accuracy:.2f}")# accuracy:.2f
 print("classification report:")
 print(report)
 

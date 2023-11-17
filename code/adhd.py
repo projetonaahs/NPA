@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 
-data = datasets.fetch_adhd(n_subjects=20) # adhd group (x)
+data = datasets.fetch_adhd(n_subjects=8) # adhd group (x)
 
 func_file = data.func[0]
 
@@ -49,6 +49,9 @@ for i, label1 in enumerate(labels):
     for j, label2 in enumerate(labels):
         if i < j and c_matrix_adhd[i, j] > threshold:
             print(f"{label1} + {label2}: {c_matrix_adhd[i, j]:.2f}")
+
+num_time_points = t_series.shape[0]
+print(f"Número de séries temporais: {num_time_points}")
 
 
 
