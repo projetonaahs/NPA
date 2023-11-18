@@ -1,74 +1,54 @@
 import os
 import numpy as np
 import pandas as pd
-from nilearn import datasets, maskers, connectome
+from nilearn import datasets, input_data, connectome
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
 
-def generate_combined_matrix(func_directory, confounds_file, num_time_points):
-    
+def generate_combined_matrix(func_directory, confounds_file, num_time_points, num_subjects):
     a = datasets.fetch_atlas_msdl()
     a_fname = a['maps']
     labels = a['labels']
 
-    m4sk3r = maskers.NiftiMapsMasker(
+    m4sk3r = input_data.NiftiMapsMasker(
         maps_img=a_fname, standardize='zscore_sample', verbose=5
     )
 
-    
     all_t_series = []
 
-    
-    for func_file in os.listdir(func_directory):
-        if func_file.endswith(".nii.gz"):
-            
-            func_path = os.path.join(func_directory, func_file)
+    func_files = sorted([f for f in os.listdir(func_directory) if f.endswith(".nii.gz")])
 
-            m4sk3r.fit(func_path)
+    for func_file in func_files[:num_subjects]:
+        func_path = os.path.join(func_directory, func_file)
 
-            
-            confounds_df = pd.read_csv(confounds_file)
-            subject_id = func_file.split("_")[1]
-            confounds_current = confounds_df[confounds_df['SUB_ID'] == int(subject_id)]
+        m4sk3r.fit(func_path)
 
-            if len(confounds_current) != num_time_points:
-                print(f"Ajustando confounds para o sujeito {subject_id}...")
-                if len(confounds_current) > num_time_points:
-                    confounds_current = confounds_current.iloc[:num_time_points]
-                else:
-                    num_missing_rows = num_time_points - len(confounds_current)
-                    missing_rows = pd.DataFrame([[0] * len(confounds_df.columns)] * num_missing_rows,
-                                                columns=confounds_df.columns)
-                    confounds_current = pd.concat([confounds_current, missing_rows], ignore_index=True)
+        confounds_df = pd.read_csv(confounds_file)
+        subject_id = func_file.split("_")[1]
 
-            t_series = m4sk3r.transform(func_path, confounds=confounds_current)
-            all_t_series.append(t_series)
+        t_series = m4sk3r.transform(func_path)
+        all_t_series.append(t_series)
 
-    
     combined_t_series = np.concatenate(all_t_series, axis=0)
 
-    
     c_measure = connectome.ConnectivityMeasure(kind='correlation')
     average_c_matrix = c_measure.fit_transform([combined_t_series])[0]
     np.fill_diagonal(average_c_matrix, 0)
 
     return average_c_matrix, labels
 
-
-func_directory = '/home/julia/Documentos/ABIDE_pcp/cpac/nofilt_noglobal/control/sdsu'
-confounds_file = '/home/julia/Documentos/ABIDE_pcp/cpac/Phenotypic_V1_0b_preprocessed1.csv'
+func_directory = '/home/julia/Documentos/ABIDE_pcp/cpac/nofilt_noglobal/control/ABIDE_pcp/cpac/nofilt_noglobal'
+confounds_file = '/home/julia/Documentos/NPA/Phenotypic_V1_0b_preprocessed1.csv'
 num_time_points = 176
 
+num_subjects = 3
 
-combined_c_matrix, labels = generate_combined_matrix(func_directory, confounds_file, num_time_points)
-
+combined_c_matrix, labels = generate_combined_matrix(func_directory, confounds_file, num_time_points, num_subjects)
 
 scaler = MinMaxScaler(feature_range=(0, 1))
 combined_c_matrix = scaler.fit_transform(combined_c_matrix)
 
-
 np.save('c_matrix_control.npy', combined_c_matrix)
-
 
 fig_matrix, ax_matrix = plt.subplots(figsize=(12, 10))
 cax_matrix = ax_matrix.matshow(combined_c_matrix, cmap='viridis')

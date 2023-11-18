@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 
-data = datasets.fetch_adhd(n_subjects=8) # adhd group (x)
+data = datasets.fetch_adhd(n_subjects=3) # adhd group (x)
 
 func_file = data.func[0]
 
