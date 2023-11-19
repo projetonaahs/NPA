@@ -34,10 +34,19 @@ def evaluate_model(model, X_test, y_test):
     report = classification_report(y_test, y_pred, target_names=['control', 'adhd', 'autism'])
     return accuracy, report
 
+def predict_class(model, new_data):
+    # Pré-processamento semelhante ao utilizado durante o treinamento
+    scaler = StandardScaler()
+    new_data = scaler.fit_transform(new_data)
+
+    # Classificação usando o modelo SVM treinado
+    classe_predita = model.predict(new_data.reshape(1, -1))
+    return classe_predita[0]
+
 def main():
     X, labels = load_data()
     X = preprocess_data(X)
-    X_train, X_test, y_train, y_test = split_data(X, labels)
+    X_train, X_test, y_train, y_test = split_data(X, labels)   
 
     model = train_svm(X_train, y_train)
 
@@ -47,6 +56,10 @@ def main():
     print("Classification Report:")
     print(report)
 
+    #
+    new_data = np.load('novo_dado.npy')  
+    predicted_class = predict_class(model, new_data)
+    print(f"a classe predita para o novo dado é: {predicted_class}")
+
 if __name__ == "__main__":
     main()
-

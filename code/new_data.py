@@ -41,19 +41,19 @@ func_directory = '/home/julia/Documentos/ABIDE_pcp/cpac/nofilt_noglobal/control/
 confounds_file = '/home/julia/Documentos/NPA/Phenotypic_V1_0b_preprocessed1.csv'
 num_time_points = 176
 
-num_subjects = 30
+num_subjects = 1
 
 combined_c_matrix, labels = generate_combined_matrix(func_directory, confounds_file, num_time_points, num_subjects)
 
 scaler = MinMaxScaler(feature_range=(0, 1))
 combined_c_matrix = scaler.fit_transform(combined_c_matrix)
 
-np.save('c_matrix_control.npy', combined_c_matrix)
+np.save('c_matrix_unknown.npy', combined_c_matrix)
 
 fig_matrix, ax_matrix = plt.subplots(figsize=(12, 10))
 cax_matrix = ax_matrix.matshow(combined_c_matrix, cmap='viridis')
 fig_matrix.colorbar(cax_matrix, shrink=0.8, aspect=20)
-ax_matrix.set_title("control connectivity matrix")
+ax_matrix.set_title("unknown connectivity matrix")
 
 ax_matrix.set_xticks(np.arange(len(labels)))
 ax_matrix.set_yticks(np.arange(len(labels)))
