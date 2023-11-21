@@ -35,7 +35,7 @@ def generate_subject_matrix(func_directory, confounds_file):
     return c_matrix, labels
 
 
-func_directory = '/home/julia/Documentos/autism/ABIDE_pcp/cpac/nofilt_global'
+func_directory = '/home/julia/Documentos/control/ABIDE_pcp/cpac/nofilt_global'  
 confounds_file = '/home/julia/Documentos/NPA/Phenotypic_V1_0b_preprocessed1.csv'
 
 subject_c_matrix, labels = generate_subject_matrix(

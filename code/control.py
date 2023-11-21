@@ -40,7 +40,7 @@ def generate_combined_matrix(func_directory, confounds_file, num_time_points, nu
     return average_c_matrix, labels
 
 
-func_directory_control = '/home/julia/Documentos/control/ABIDE_pcp/cpac/nofilt_global/'
+func_directory_control = '/home/julia/Documentos/control/ABIDE_pcp/cpac/nofilt_global/' 
 confounds_file = '/home/julia/Documentos/NPA/Phenotypic_V1_0b_preprocessed1.csv'
 num_time_points = 176
 num_subjects = 10
