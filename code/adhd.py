@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 
-data = datasets.fetch_adhd(n_subjects=10)  # Grupo ADHD
+data = datasets.fetch_adhd(n_subjects=10)  
 
 func_file = data.func[0]
 confounds_file = data.confounds[0]
@@ -38,7 +38,7 @@ ax_matrix.set_yticks(np.arange(len(labels)))
 ax_matrix.set_xticklabels(labels, rotation=90)
 ax_matrix.set_yticklabels(labels)
 
-# Imprime as conexões acima de 0.7
+
 threshold = 0.7
 for i, label1 in enumerate(labels):
     for j, label2 in enumerate(labels):
