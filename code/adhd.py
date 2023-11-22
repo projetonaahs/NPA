@@ -1,9 +1,9 @@
-from nilearn import datasets, maskers, connectome
+from nilearn import datasets, maskers, connectome, plotting
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 
-data = datasets.fetch_adhd(n_subjects=10)  
+data = datasets.fetch_adhd(n_subjects=10)
 
 func_file = data.func[0]
 confounds_file = data.confounds[0]
@@ -11,6 +11,7 @@ confounds_file = data.confounds[0]
 a = datasets.fetch_atlas_msdl()
 a_fname = a['maps']
 labels = a['labels']
+coords = a.region_coords
 
 m4sk3r = maskers.NiftiMapsMasker(
     maps_img=a_fname, standardize='zscore_sample', memory='nilearn_cache', verbose=5
@@ -31,13 +32,12 @@ np.save('c_matrix_adhd.npy', c_matrix_adhd)
 fig_matrix, ax_matrix = plt.subplots(figsize=(12, 10))
 cax_matrix = ax_matrix.matshow(c_matrix_adhd, cmap='viridis')
 fig_matrix.colorbar(cax_matrix, shrink=0.8, aspect=20)
-ax_matrix.set_title("ADHD Correlation Matrix")
+ax_matrix.set_title("matriz de correlação TDH")
 
 ax_matrix.set_xticks(np.arange(len(labels)))
 ax_matrix.set_yticks(np.arange(len(labels)))
 ax_matrix.set_xticklabels(labels, rotation=90)
 ax_matrix.set_yticklabels(labels)
-
 
 threshold = 0.7
 for i, label1 in enumerate(labels):
@@ -48,4 +48,6 @@ for i, label1 in enumerate(labels):
 num_time_points = t_series.shape[0]
 print(f"Número de séries temporais: {num_time_points}")
 
-plt.show()
+view = plotting.view_connectome(c_matrix_adhd, node_coords=coords, edge_threshold='80%')
+view.open_in_browser()
+
