@@ -7,14 +7,14 @@ from sklearn.metrics import classification_report, confusion_matrix
 def load_data():
 
     #arquivos de treinamento 
-    c_matrix_control = np.load('c_matrix_control.npy')
+    # c_matrix_control = np.load('c_matrix_control.npy')
     c_matrix_adhd = np.load('c_matrix_adhd.npy')
     c_matrix_autism = np.load('c_matrix_autism.npy')
-     #arquivos de treinamento 
+    #arquivos de treinamento 
 
-    labels = [0] * len(c_matrix_control) + [1] * len(c_matrix_adhd) + [2] * len(c_matrix_autism)
+    labels = [0] * len(c_matrix_adhd) + [1] * len(c_matrix_autism)
 
-    X = np.concatenate([c_matrix_control, c_matrix_adhd, c_matrix_autism])
+    X = np.concatenate([c_matrix_adhd, c_matrix_autism])
 
     return X, labels
 
@@ -30,7 +30,7 @@ def train_svm(X_train, y_train):
 
 def evaluate_model(model, X_test, y_test):
     y_pred = model.predict(X_test)
-    report = classification_report(y_test, y_pred, target_names=['control', 'adhd', 'autism'])
+    report = classification_report(y_test, y_pred, target_names=['adhd', 'autism'])
     confusion_mat = confusion_matrix(y_test, y_pred)
     return report, confusion_mat
 
@@ -49,7 +49,7 @@ def main():
 
     model = train_svm(X_train, y_train)
  
-    cv_scores = cross_val_score(model, X_train, y_train, cv=5)
+    cv_scores = cross_val_score(model, X_train, y_train, cv=11)
     print(f'Acurácia média da validação cruzada nos dados de treinamento: {np.mean(cv_scores):.2f}')
 
     report_test, confusion_mat = evaluate_model(model, X_test, y_test)
@@ -68,7 +68,7 @@ def main():
     formatted_probability = format_probability(probability)
 
     probability = model.predict_proba(unknown_matrix_preprocessed)
-    print(f'Probabilidade: {probability}')
+    print(f'Probabilidade: {formatted_probability}')
 
     print(f'Previsão na matriz desconhecida: {prediction}')
     
@@ -77,10 +77,8 @@ def main():
     for element, count in zip(unique_elements, counts):
         if count >= 19:
             if element == 0:
-                print("Diagnóstico previsto: controle")
-            elif element == 1:
                 print("Diagnóstico previsto: Tanstorno de Déficit de Atenção e Hiperatividade (TDH)")
-            elif element == 2:
+            elif element == 1:
                 print("Diagnóstico previsto: Transtorno do Espectro Autista (TEA)")
 
 if __name__ == "__main__":

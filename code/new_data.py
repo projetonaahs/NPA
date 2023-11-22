@@ -1,59 +1,53 @@
-import os
+from nilearn import datasets, maskers, connectome, plotting
 import numpy as np
-import pandas as pd
-from nilearn import datasets, input_data, connectome
-from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
 
+data = datasets.fetch_adhd(n_subjects=1)
 
-def generate_subject_matrix(func_directory, confounds_file):
-    a = datasets.fetch_atlas_msdl()
-    a_fname = a['maps']
-    labels = a['labels']
+func_file = data.func[0]
+confounds_file = data.confounds[0]
 
-    m4sk3r = input_data.NiftiMapsMasker(
-        maps_img=a_fname, standardize='zscore_sample', verbose=5
-    )
+a = datasets.fetch_atlas_msdl()
+a_fname = a['maps']
+labels = a['labels']
+coords = a.region_coords
 
-    func_files = [f for f in os.listdir(
-        func_directory) if f.endswith(".nii.gz")]
+m4sk3r = maskers.NiftiMapsMasker(
+    maps_img=a_fname, standardize='zscore_sample', memory='nilearn_cache', verbose=5
+)
+m4sk3r.fit(func_file)
+t_series = m4sk3r.transform(func_file, confounds=confounds_file)
 
-    selected_subject = np.random.choice(func_files, 1)[0]
-    func_path = os.path.join(func_directory, selected_subject)
+c_measure = connectome.ConnectivityMeasure(kind='correlation')
+c_matrix_adhd = c_measure.fit_transform([t_series])[0]
 
-    m4sk3r.fit(func_path)
-
-    confounds_df = pd.read_csv(confounds_file)
-    subject_id = selected_subject.split("_")[1]
-
-    t_series = m4sk3r.transform(func_path)
-
-    c_measure = connectome.ConnectivityMeasure(kind='correlation')
-    c_matrix = c_measure.fit_transform([t_series])[0]
-    np.fill_diagonal(c_matrix, 0)
-
-    return c_matrix, labels
-
-
-func_directory = '/home/julia/Documentos/control/ABIDE_pcp/cpac/nofilt_global'  
-confounds_file = '/home/julia/Documentos/NPA/Phenotypic_V1_0b_preprocessed1.csv'
-
-subject_c_matrix, labels = generate_subject_matrix(
-    func_directory, confounds_file)
+np.fill_diagonal(c_matrix_adhd, 0)
 
 scaler = MinMaxScaler(feature_range=(0, 1))
-subject_c_matrix = scaler.fit_transform(subject_c_matrix)
+c_matrix_adhd = scaler.fit_transform(c_matrix_adhd)
 
-np.save('c_matrix_unknown.npy', subject_c_matrix)
+np.save('c_matrix_unknown.npy', c_matrix_adhd)
 
 fig_matrix, ax_matrix = plt.subplots(figsize=(12, 10))
-cax_matrix = ax_matrix.matshow(subject_c_matrix, cmap='viridis')
+cax_matrix = ax_matrix.matshow(c_matrix_adhd, cmap='viridis')
 fig_matrix.colorbar(cax_matrix, shrink=0.8, aspect=20)
-ax_matrix.set_title("Unknown Connectivity Matrix")
+ax_matrix.set_title("matriz de correlação TDH")
 
 ax_matrix.set_xticks(np.arange(len(labels)))
 ax_matrix.set_yticks(np.arange(len(labels)))
 ax_matrix.set_xticklabels(labels, rotation=90)
 ax_matrix.set_yticklabels(labels)
 
-plt.show()
+threshold = 0.7
+for i, label1 in enumerate(labels):
+    for j, label2 in enumerate(labels):
+        if i < j and c_matrix_adhd[i, j] > threshold:
+            print(f"{label1} + {label2}: {c_matrix_adhd[i, j]:.2f}")
+
+num_time_points = t_series.shape[0]
+print(f"Número de séries temporais: {num_time_points}")
+
+view = plotting.view_connectome(c_matrix_adhd, node_coords=coords, edge_threshold='80%')
+view.open_in_browser()
+
