@@ -43,7 +43,7 @@ def generate_combined_matrix(func_directory, confounds_file, num_time_points, nu
 func_directory = '/home/julia/Documentos/autism/ABIDE_pcp/cpac/nofilt_global/'
 confounds_file = '/home/julia/Documentos/NPA/Phenotypic_V1_0b_preprocessed1.csv'
 num_time_points = 176
-num_subjects = 10
+num_subjects = 25
 
 combined_c_matrix, labels = generate_combined_matrix(
     func_directory, confounds_file, num_time_points, num_subjects)

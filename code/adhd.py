@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 
-data = datasets.fetch_adhd(n_subjects=10)
+data = datasets.fetch_adhd(n_subjects=25)
 
 func_file = data.func[0]
 confounds_file = data.confounds[0]
