@@ -7,7 +7,6 @@ from sklearn.metrics import classification_report, confusion_matrix
 def load_data():
 
     #arquivos de treinamento 
-    # c_matrix_control = np.load('c_matrix_control.npy')
     c_matrix_adhd = np.load('c_matrix_adhd.npy')
     c_matrix_autism = np.load('c_matrix_autism.npy')
     #arquivos de treinamento 
