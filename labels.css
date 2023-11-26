@@ -6,7 +6,7 @@ body {
     max-width: 80vw;
     margin: auto;
     text-align: justify;
-    background-color: rgb(4, 4, 43);
+    background-color: rgb(64, 102, 112);
    
 }
 ul {
@@ -20,7 +20,16 @@ h2 {
 }
 section {
     background-color: whitesmoke;
-    color: rgb(4, 4, 43);
+    color:  rgb(64, 102, 112);
     padding: 60px 30px;
     margin: 45px 0;
+}
+
+@media screen and (max-width:900px) {
+    body {
+        text-align: left;
+    }
+    section p {
+        font-size: 16px;
+    }
 }

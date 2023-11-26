@@ -37,6 +37,7 @@ def format_probability(probability):
     formatted_probs = []
     for prob in probability:
         formatted_probs.append([f"{p:.2%}" for p in prob])
+
     return formatted_probs
 
 def main():
@@ -67,7 +68,10 @@ def main():
     formatted_probability = format_probability(probability)
 
     probability = model.predict_proba(unknown_matrix_preprocessed)
-    print(f'probability: {formatted_probability}')
+    formatted_probability = format_probability(probability)
+    print("probability:")
+    for row in formatted_probability:
+        print(row)
 
     print(f'prev. unknown matrix: {prediction}')
     

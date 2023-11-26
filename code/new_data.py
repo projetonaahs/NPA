@@ -29,12 +29,12 @@ np.fill_diagonal(c_matrix_adhd, 0)
 scaler = MinMaxScaler(feature_range=(0, 1))
 c_matrix_adhd = scaler.fit_transform(c_matrix_adhd)
 
-np.save('c_matrix_unknown.npy', c_matrix_adhd)
+np.save('c_matrix_unknown.npy', c_matrix_adhd) #you must always save the matrix as "c_matrix_unknown.npy" because the model is expecting receive this file regardless of the condition you're testing..
 
 fig_matrix, ax_matrix = plt.subplots(figsize=(12, 10))
 cax_matrix = ax_matrix.matshow(c_matrix_adhd, cmap='viridis')
 fig_matrix.colorbar(cax_matrix, shrink=0.8, aspect=20)
-ax_matrix.set_title("matriz de correlação desconhecida")
+ax_matrix.set_title("unknown correlation matrix")
 
 ax_matrix.set_xticks(np.arange(len(labels)))
 ax_matrix.set_yticks(np.arange(len(labels)))
