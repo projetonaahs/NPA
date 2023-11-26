@@ -6,10 +6,10 @@ from sklearn.metrics import classification_report, confusion_matrix
 
 def load_data():
 
-    #arquivos de treinamento 
+    #training files 
     c_matrix_adhd = np.load('c_matrix_adhd.npy')
     c_matrix_autism = np.load('c_matrix_autism.npy')
-    #arquivos de treinamento 
+    #training files 
 
     labels = [0] * len(c_matrix_adhd) + [1] * len(c_matrix_autism)
 
@@ -48,17 +48,17 @@ def main():
 
     model = train_svm(X_train, y_train)
  
-    cv_scores = cross_val_score(model, X_train, y_train, cv=11)
-    print(f'Acurácia média da validação cruzada nos dados de treinamento: {np.mean(cv_scores):.2f}')
+    cv_scores = cross_val_score(model, X_train, y_train, cv=10)
+    print(f'cross validation accuracy: {np.mean(cv_scores):.2f}')
 
     report_test, confusion_mat = evaluate_model(model, X_test, y_test)
-    print("Relatório (treinamento):")
+    print("report (trainment):")
     print(report_test)
 
-    print("Matriz de confusão:")
+    print("confusion matrix:")
     print(confusion_mat)
 
-    unknown_matrix = np.load('c_matrix_unknown.npy') #arquivo a ser classificado (não-diagnosticado)
+    unknown_matrix = np.load('c_matrix_unknown.npy') #non-diag.
     unknown_matrix_preprocessed = scaler.transform(unknown_matrix)
 
     prediction = model.predict(unknown_matrix_preprocessed)
@@ -67,18 +67,18 @@ def main():
     formatted_probability = format_probability(probability)
 
     probability = model.predict_proba(unknown_matrix_preprocessed)
-    print(f'Probabilidade: {formatted_probability}')
+    print(f'probability: {formatted_probability}')
 
-    print(f'Previsão na matriz desconhecida: {prediction}')
+    print(f'prev. unknown matrix: {prediction}')
     
 
     unique_elements, counts = np.unique(prediction, return_counts=True)
     for element, count in zip(unique_elements, counts):
         if count >= 19:
             if element == 0:
-                print("Diagnóstico previsto: Tanstorno de Déficit de Atenção e Hiperatividade (TDH)")
+                print("major matches: Attention Deficit Hyperactivity Disorder (ADHD)")
             elif element == 1:
-                print("Diagnóstico previsto: Transtorno do Espectro Autista (TEA)")
+                print("major matches: Autism Spectrum Disorder (ASD)")
 
 if __name__ == "__main__":
     main()

@@ -1,10 +1,26 @@
 # NPA
 
-In an effort to enhance the accessibility of neuroscience studies and neural network data analysis for the social community, we are currently developing the Neural Patterns Analyzer (NPA). The NPA is a nonprofit initiative aiming to analyze neural patterns using functional Magnetic Resonance Imaging (fMRI) images.
+## main components 
 
-These images are produced when an individual is actively performing a specific task or in a resting state. The algorithm utilizes a correlation matrix to represent the interconnections between various brain regions, illustrating the strength of these connections. By scrutinizing this matrix, we can identify the most actively interconnected brain regions.
+![inputs](./images/step.png)
 
-Moreover, the NPA will provide valuable information about the different brain regions involved in the process. Each brain area will be identified by a specific label or name - including its description, facilitating result interpretation. These labels will pinpoint specific brain regions responsible for language, memory, emotions, and more. When adequately trained, the program holds the potential to identify neural activation patterns possibly linked to certain neurological or psychiatric conditions.
+load_autism.py: load the autism group;
 
-In conclusion, the Neural Patterns Analyzer represents a powerful tool that leverages cutting-edge science to improve our comprehension of the human brain. As we progress in developing this system to identify and analyze neural patterns, the NPA contributes to a diverse range of emerging systems, revolutionizing the way we approach understanding and treating neurological conditions.
+autism.py: similar to the above but for the autism group;
+
+adhd.py: generates the connectivity matrix for the subjects to train the machine;
+
+model_svm.py: after training with the two connectivity matrices (adhd + autism), generates predictions from another matrix of an unknown group;
+
+new_data.py: preprocesses and calculates the matrix that needs to be predicted.
+
+## structure
+### training
+
+these two main files are extremely important as they provide the 'food' to feed the support vector machine.
+
+in this case, we are using only 25 subjects from each condition to extract connectivity.
+>ps: you don't need to run those files to use the system, only the load_autism.py.
+
+![inputs](./images/step1.png)
 

@@ -1,3 +1,5 @@
+#here you can add any type of condition to generate de unknown_matrix in order to test the model
+
 from nilearn import datasets, maskers, connectome, plotting
 import numpy as np
 import matplotlib.pyplot as plt
@@ -32,7 +34,7 @@ np.save('c_matrix_unknown.npy', c_matrix_adhd)
 fig_matrix, ax_matrix = plt.subplots(figsize=(12, 10))
 cax_matrix = ax_matrix.matshow(c_matrix_adhd, cmap='viridis')
 fig_matrix.colorbar(cax_matrix, shrink=0.8, aspect=20)
-ax_matrix.set_title("matriz de correlação TDH")
+ax_matrix.set_title("matriz de correlação desconhecida")
 
 ax_matrix.set_xticks(np.arange(len(labels)))
 ax_matrix.set_yticks(np.arange(len(labels)))
@@ -46,7 +48,7 @@ for i, label1 in enumerate(labels):
             print(f"{label1} + {label2}: {c_matrix_adhd[i, j]:.2f}")
 
 num_time_points = t_series.shape[0]
-print(f"Número de séries temporais: {num_time_points}")
+print(f"n time series: {num_time_points}")
 
 view = plotting.view_connectome(c_matrix_adhd, node_coords=coords, edge_threshold='80%')
 view.open_in_browser()
