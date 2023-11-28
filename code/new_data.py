@@ -50,6 +50,6 @@ for i, label1 in enumerate(labels):
 num_time_points = t_series.shape[0]
 print(f"n time series: {num_time_points}")
 
-view = plotting.view_connectome(c_matrix_adhd, node_coords=coords, edge_threshold='80%')
-view.open_in_browser()
+plotting.plot_connectome(c_matrix_adhd, node_coords=coords, edge_threshold='80%')
+plt.show()
 
