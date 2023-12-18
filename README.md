@@ -1,4 +1,4 @@
-# neural patterns analyzer
+# neural pattern analyzer
 
 ## main components 
 
