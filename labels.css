@@ -24,12 +24,34 @@ section {
     padding: 60px 30px;
     margin: 45px 0;
 }
-
-@media screen and (max-width:900px) {
-    body {
+button {
+    background-color: #eee;
+    padding: 5px 12px;
+    border: none;
+    font-size: 20px;
+    color: rgb(64, 102, 112);
+    font-weight: 900;
+}
+button:hover {
+    transition: 0.5s;
+    cursor: pointer;
+    background-color: rgb(44, 70, 77);
+    color: #eee;
+}
+@media screen and (max-width:1000px) {
+    h1 {
         text-align: left;
+        font-size: 30px;
     }
-    section p {
+    section ul li {
         font-size: 16px;
+    }
+   
+}
+@media screen and (max-width:550px) {
+    
+    section ul  {
+        text-indent: 0;
+        padding: 0;
     }
 }
